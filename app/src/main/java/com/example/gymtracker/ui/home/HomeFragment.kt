@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gymtracker.Models.Exercise
 import com.example.gymtracker.R
+import com.example.gymtracker.databinding.DialogAddExerciseBinding
 import com.example.gymtracker.databinding.FragmentHomeBinding
+import com.example.gymtracker.databinding.ItemExerciseBinding
+import com.example.gymtracker.ui.home.adapter.ExerciseAdapter
+import com.example.gymtracker.ui.home.dialog.AddExerciseDialog
 
 class HomeFragment : Fragment()
 {
@@ -33,17 +37,17 @@ class HomeFragment : Fragment()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         exerciseAdapter = ExerciseAdapter(exercises)
-       binding.recyclerView.apply {
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = exerciseAdapter
         }
 
-      binding.btnAddExercise.setOnClickListener {
+        binding.btnAddExercise.setOnClickListener {
             // هنا هنضيف الكود لإضافة تمرين جديد
-          AddExerciseDialog { exercise ->
-              exercises.add(exercise)
-              exerciseAdapter.notifyDataSetChanged()
-          }.show(requireActivity().supportFragmentManager, "AddExerciseDialog")
+            AddExerciseDialog { exercise ->
+                exercises.add(exercise)
+                exerciseAdapter.notifyDataSetChanged()
+            }.show(requireActivity().supportFragmentManager, "AddExerciseDialog")
         }
 
 
@@ -51,55 +55,6 @@ class HomeFragment : Fragment()
         return binding.root
     }
 
-
-    // adapter/ExerciseAdapter.kt
-    class ExerciseAdapter(private val exercises: List<Exercise>) :
-            RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
-
-        class ExerciseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val name: TextView = view.findViewById(R.id.exerciseName)
-            val details: TextView = view.findViewById(R.id.exerciseDetails)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_exercise, parent, false)
-            return ExerciseViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
-            val exercise = exercises[position]
-            holder.name.text = exercise.name
-            holder.details.text = "Sets: ${exercise.sets}, Reps: ${exercise.reps}, Weight: ${exercise.weight}kg"
-        }
-
-        override fun getItemCount(): Int = exercises.size
-    }
-
-
-
-
-    // AddExerciseDialog.kt
-    class AddExerciseDialog(private val listener: (Exercise) -> Unit) : DialogFragment() {
-
-        override fun onCreateView(
-                inflater: LayoutInflater, container: ViewGroup?,
-                savedInstanceState: Bundle?
-        ): View? {
-            val view = inflater.inflate(R.layout.dialog_add_exercise, container, false)
-            view.findViewById<Button>(R.id.btnAdd).setOnClickListener {
-                val name = view.findViewById<EditText>(R.id.etName).text.toString()
-                val sets = view.findViewById<EditText>(R.id.etSets).text.toString().toInt()
-                val reps = view.findViewById<EditText>(R.id.etReps).text.toString().toInt()
-                val weight = view.findViewById<EditText>(R.id.etWeight).text.toString().toFloat()
-
-                val exercise = Exercise(name, sets, reps, weight)
-                listener(exercise)
-                dismiss()
-            }
-            return view
-        }
-    }
 
     override fun onDestroyView()
     {
