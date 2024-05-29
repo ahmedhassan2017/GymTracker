@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.gymtracker.Models.Exercise
 import com.example.gymtracker.databinding.DialogAddExerciseBinding
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class AddExerciseDialog(private val listener: (Exercise) -> Unit) : DialogFragment() {
 
@@ -29,7 +32,7 @@ class AddExerciseDialog(private val listener: (Exercise) -> Unit) : DialogFragme
             val reps = binding.etReps.text.toString()
             val weight = binding.etWeight.text.toString()
 
-            val exercise = Exercise(name, sets, reps, weight)
+            val exercise = Exercise(name, sets, reps, weight,getCurrentDate())
             listener(exercise)
             dismiss()
         }
@@ -39,4 +42,11 @@ class AddExerciseDialog(private val listener: (Exercise) -> Unit) : DialogFragme
         super.onDestroyView()
         _binding = null
     }
+
+    private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        return dateFormat.format(calendar.time)
+    }
+
 }
