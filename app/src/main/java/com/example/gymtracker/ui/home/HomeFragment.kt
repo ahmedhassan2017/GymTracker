@@ -36,7 +36,7 @@ class HomeFragment : Fragment()
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        exerciseAdapter = ExerciseAdapter(exercises)
+        exerciseAdapter = ExerciseAdapter()
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = exerciseAdapter
@@ -46,7 +46,7 @@ class HomeFragment : Fragment()
             // هنا هنضيف الكود لإضافة تمرين جديد
             AddExerciseDialog { exercise ->
                 exercises.add(exercise)
-                exerciseAdapter.notifyDataSetChanged()
+                exerciseAdapter.submitList(exercises.toList())
             }.show(requireActivity().supportFragmentManager, "AddExerciseDialog")
         }
 
